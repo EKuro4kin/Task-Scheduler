@@ -1,18 +1,47 @@
-version: "3.7"
+version: "3.9"
+
 services:
-  main_todolist_db:
-    image: postgres:12.0-alpine
+  front:
+    image:  sermalenk/skypro-front:lesson-34
+    ports:
+      - 80:80
+    depends_on:
+      - api
+  api:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    depends_on:
+      pg:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     volumes:
-      - todolist_postgres_data:/var/lib/postgresql/data
+      - ./.env:/app/.env
+  migrations:
+    build:
+      context: .
+    volumes:
+      - ./.env:/app/.env
+    depends_on:
+      pg:
+        condition: service_healthy
+#    command: python ./todolist/manage.py migrate
+    command: python ./todolist/manage.py migrate
+  pg:
+    image: postgres:latest
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_USER=postgresql
-      - POSTGRES_PASSWORD=postgresql
-      - POSTGRES_DB=todolist
-      - POSTGRES_HOST=localhost
-      - POSTGRES_PORT=5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: todolist
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-
-volumes:
-  todolist_postgres_data:
