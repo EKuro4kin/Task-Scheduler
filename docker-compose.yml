@@ -9,7 +9,9 @@ services:
       - api
   api:
     build:
-      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
     ports:
       - 8000:8000
     depends_on:
@@ -28,15 +30,20 @@ services:
       pg:
         condition: service_healthy
 #    command: python ./todolist/manage.py migrate
+    env_file:
+      - .env
     command: python ./todolist/manage.py migrate
   pg:
     image: postgres:latest
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: todolist
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    restart: always
+    env_file:
+      - .env
     volumes:
       - ./pg_data:/var/lib/postgresql/data
     healthcheck:
