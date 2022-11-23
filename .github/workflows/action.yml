@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: clone code
-        uses: workflows/checkout@v2
+        uses: actions/checkout@v2
       - name: docker build
         run: docker build -t ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
       - name: docker login
