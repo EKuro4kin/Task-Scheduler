@@ -43,6 +43,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          scripts: |
+          script: |
             cd calendar_ci
             echo ${{ secrets.PASSWORD }} | sudo -S docker-compose up -d
