@@ -26,6 +26,8 @@ services:
       pg:
         condition: service_healthy
 #    command: python ./todolist/manage.py migrate
+    env_file:
+      - .env
     command: python ./todolist/manage.py migrate
   pg:
     image: postgres:latest
