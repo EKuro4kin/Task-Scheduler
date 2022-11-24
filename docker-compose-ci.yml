@@ -8,7 +8,11 @@ services:
     depends_on:
       - api
   api:
-    image: ekurochkin/calendar_ekurochkin_app
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     ports:
       - 8000:8000
     depends_on:
@@ -19,7 +23,9 @@ services:
     volumes:
       - ./.env:/app/.env
   migrations:
-    image: ekurochkin/calendar_ekurochkin_app
+    build:
+      context: .
+    image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     volumes:
       - ./.env:/app/.env
     depends_on:
