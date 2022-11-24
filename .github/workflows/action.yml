@@ -27,7 +27,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "calendar/docker-compose.yml"
+          source: "deploy/docker-compose.yml"
           target: "calendar_ci"
           strip_components: 1
 #      - name: deploy app
