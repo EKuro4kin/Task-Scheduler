@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: "calendar/docker-compose.yml"
-          target: "calendar"
+          target: "calendar_ci"
           strip_components: 1
 #      - name: deploy app
 #        uses: appleboy/ssh-action@master
