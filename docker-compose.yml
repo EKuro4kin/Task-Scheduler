@@ -31,7 +31,7 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-#    command: python ./todolist/manage.py migrate
+#    command:  python ./todolist/manage.py m igrate
     env_file:
       - .env
     command: python ./todolist/manage.py migrate
