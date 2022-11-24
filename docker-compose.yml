@@ -8,6 +8,10 @@ services:
     depends_on:
       - api
   api:
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
     image: ekurochkin/calendar_ekurochkin_app
     ports:
       - 8000:8000
@@ -19,6 +23,8 @@ services:
     volumes:
       - ./.env:/app/.env
   migrations:
+    build:
+      context: .
     image: ekurochkin/calendar_ekurochkin_app
     volumes:
       - ./.env:/app/.env

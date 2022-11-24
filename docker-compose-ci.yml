@@ -8,10 +8,6 @@ services:
     depends_on:
       - api
   api:
-    build:
-      dockerfile: Dockerfile
-    env_file:
-      - .env
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     ports:
       - 8000:8000
@@ -23,8 +19,6 @@ services:
     volumes:
       - ./.env:/app/.env
   migrations:
-    build:
-      context: .
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     volumes:
       - ./.env:/app/.env
@@ -32,8 +26,6 @@ services:
       pg:
         condition: service_healthy
 #    command: python ./todolist/manage.py migrate
-    env_file:
-      - .env
     command: python ./todolist/manage.py migrate
   pg:
     image: postgres:latest
@@ -44,8 +36,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     restart: always
-    env_file:
-      - .env
     volumes:
       - ./pg_data:/var/lib/postgresql/data
     healthcheck:
