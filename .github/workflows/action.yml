@@ -20,14 +20,14 @@ jobs:
       - name: render configs
         run: |
           mkdir deploy_2
-          cat docker-compose-ci.yaml | envsubst > deploy_2/docker-compose.yaml
+          cat docker-compose-ci.yaml | envsubst > calendar/docker-compose.yaml
       - name: copy files to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "deploy_2/docker-compose.yml"
+          source: "calendar/docker-compose.yml"
           target: "calendar"
           strip_components: 1
 #      - name: deploy app
