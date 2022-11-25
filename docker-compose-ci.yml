@@ -33,8 +33,7 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-    command: >
-      sh -c "python3 manage.py migrate"
+    command: python ./todolist/manage.py migrate
   pg:
     image: postgres:latest
     ports:
