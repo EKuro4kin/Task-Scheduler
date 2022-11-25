@@ -9,6 +9,12 @@ services:
       - api
   api:
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SECRET_KEY: ${SECRET_KEY}
     ports:
       - 8000:8000
     depends_on:
@@ -16,18 +22,17 @@ services:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-    volumes:
-      - ./.env:/app/.env
   migrations:
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    volumes:
-      - ./.env:/app/.env
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       pg:
         condition: service_healthy
-#    command: python ./todolist/manage.py migrate
-    env_file:
-      - .env
     command: python ./todolist/manage.py migrate
   pg:
     image: postgres:latest
