@@ -14,6 +14,7 @@ class Board(DatesModelMixin):
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
 
 
+
 class BoardParticipant(DatesModelMixin):
     class Meta:
         unique_together = ("board", "user")
