@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticated
 
-from goals.models import BoardParticipant, GoalCategory, Board, GoalComment
+from goals.models import BoardParticipant, GoalCategory, Board, GoalComment, Goal
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -37,8 +37,8 @@ class GoalCategoryPermissions(IsAuthenticated):
 
 class GoalPermissions(IsAuthenticated):
 
-    def has_object_permission(self, request, view, obj: Board):
-        filters: dict = {'user': request.user, 'board': obj.categories.board}
+    def has_object_permission(self, request, view, obj: Goal):
+        filters: dict = {'user': request.user, 'board': obj.category.board}
         if request.method not in permissions.SAFE_METHODS:
             filters['role__in'] = [BoardParticipant.Role.owner, BoardParticipant.Role.writer]
         return BoardParticipant.objects.filter(**filters).exists()

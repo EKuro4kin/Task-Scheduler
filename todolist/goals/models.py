@@ -96,3 +96,4 @@ class GoalComment(DatesModelMixin):
     goal = models.ForeignKey(Goal, verbose_name="Цель", on_delete=models.PROTECT, related_name="comments")
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.PROTECT, related_name="comments")
 
+
