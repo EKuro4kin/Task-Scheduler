@@ -1,8 +1,10 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import List
 
-import marshmallow
+
 import marshmallow_dataclass
+from marshmallow_dataclass import dataclass
+from marshmallow import EXCLUDE
 
 
 @dataclass
@@ -13,7 +15,7 @@ class MessageFrom:
     username: str = ""
 
     class Meta:
-        unknown = marshmallow.EXCLUDE
+        unknown = EXCLUDE
 
 
 @dataclass
@@ -24,7 +26,7 @@ class Chat:
     username: str = ""
 
     class Meta:
-        unknown = marshmallow.EXCLUDE
+        unknown = EXCLUDE
 
 
 @dataclass
@@ -36,7 +38,7 @@ class Message:
     chat: Chat
 
     class Meta:
-        unknown = marshmallow.EXCLUDE
+        unknown = EXCLUDE
 
 
 @dataclass
@@ -45,7 +47,7 @@ class SendMessageResponse:
     result: Message
 
     class Meta:
-        unknown = marshmallow.EXCLUDE
+        unknown = EXCLUDE
 
 
 @dataclass
@@ -54,7 +56,7 @@ class UpdateObj:
     message: Message
 
     class Meta:
-        unknown = marshmallow.EXCLUDE
+        unknown = EXCLUDE
 
 
 @dataclass
@@ -63,8 +65,8 @@ class GetUpdatesResponse:
     result: List[UpdateObj]
 
     class Meta:
-        unknown = marshmallow.EXCLUDE
+        unknown = EXCLUDE
 
 
-get_updates_schema = marshmallow_dataclass.class_schema(GetUpdatesResponse)
-send_message_schema = marshmallow_dataclass.class_schema(SendMessageResponse)
+get_updates_schema = marshmallow_dataclass.class_schema(GetUpdatesResponse)()
+send_message_schema = marshmallow_dataclass.class_schema(SendMessageResponse)()
