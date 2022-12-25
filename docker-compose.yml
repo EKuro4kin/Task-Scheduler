@@ -33,7 +33,7 @@ services:
         condition: service_completed_successfully
       pg:
         condition: service_healthy
-    command: python manage.py runbot
+    command: python ./todolist/manage.py
     volumes:
       - ./.env:/app/.env
 
