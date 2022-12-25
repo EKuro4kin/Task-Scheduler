@@ -2,11 +2,12 @@ version: "3.9"
 
 services:
   front:
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     ports:
       - 80:80
     depends_on:
       - api
+
   api:
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
@@ -24,6 +25,19 @@ services:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
+
+  bot:
+    image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    restart: always
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    command: python manage.py runbot
+    volumes:
+      - .docker_env:/app/.env
+
   migrations:
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
@@ -38,6 +52,7 @@ services:
       pg:
         condition: service_healthy
     command: python ./todolist/manage.py migrate
+
   pg:
     image: postgres:latest
     ports:
