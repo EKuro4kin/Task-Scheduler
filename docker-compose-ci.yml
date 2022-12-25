@@ -30,9 +30,9 @@ services:
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     restart: always
     depends_on:
-      migration:
+      migrations:
         condition: service_completed_successfully
-      postgres:
+      pg:
         condition: service_healthy
     command: python manage.py runbot
     volumes:
