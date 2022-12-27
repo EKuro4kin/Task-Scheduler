@@ -177,3 +177,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+TG_BOT_API_TOKEN=env.str('TG_BOT_API_TOKEN')

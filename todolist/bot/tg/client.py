@@ -22,11 +22,9 @@ class TgClient:
     # def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdatesResponse:
     #     """
     #     Получения входящих обновлений от пользователя.
-    #
     #     Args:
     #         offset: int
     #         timeout: int
-    #
     #     Returns:
     #         GetUpdatesResponse
     #     """
@@ -41,7 +39,7 @@ class TgClient:
     def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdatesResponse:
         url = self.get_url('getUpdates')
         response = requests.get(url, params={'offset': offset, 'timeout': timeout})
-
+        print(response.json())
         return get_updates_schema.load(response.json())
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
@@ -58,5 +56,6 @@ class TgClient:
         response = requests.get(self.get_url(f"sendMessage?chat_id={chat_id}&text={text}"))
         json_data = response.json()
         result = send_message_schema().load(json_data)
+        print(response.json())
 
         return result
