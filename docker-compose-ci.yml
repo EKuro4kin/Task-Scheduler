@@ -29,6 +29,15 @@ services:
 
   bot:
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    environment:
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SECRET_KEY: ${SECRET_KEY}
+      TG_BOT_API_TOKEN: ${TG_BOT_API_TOKEN}
     restart: always
     depends_on:
       migrations:

@@ -1,24 +1,29 @@
-from rest_framework import generics
-from rest_framework.exceptions import ValidationError
+import os
+
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from bot.models import TgUser
-from bot.serializers import TgUserVerCodSerializer
+from bot.serializers import TgUserSerializer
+from bot.tg.client import TgClient
 
 
-class TgUserUpdate(generics.UpdateAPIView):
+class BotVerifyView(generics.UpdateAPIView):
     model = TgUser
-    serializer_class = TgUserVerCodSerializer
-    permission_classes = (IsAuthenticated,)
-    http_method_names = ("patch",)
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['patch']
+    serializer_class = TgUserSerializer
 
-    def get_object(self):
-        try:
-            obj = self.model.objects.get(verification_code=self.request.data.get('verification_code'))
-        except self.model.DoesNotExist:
-            raise ValidationError({"verification_code": "Неправильный верификационный код"})
+    def patch(self, request, *args, **kwargs):
+        data = self.serializer_class(request.data).data
+        tg_client = TgClient(os.environ.get('TG_BOT_API_TOKEN'))
+        tg_user = TgUser.objects.filter(verification_code=data['verification_code']).first()
+        if not tg_user:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        tg_user.user = request.user
+        tg_user.save()
+        tg_client.send_message(chat_id=tg_user.chat_id, text='Успешная авторизация!')
+        return Response(status=status.HTTP_200_OK)
 
-        return obj
 
-    def perform_update(self, serializer):
-        serializer.save(user=self.request.user)

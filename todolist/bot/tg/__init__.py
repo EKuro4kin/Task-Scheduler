@@ -1,8 +1,8 @@
 import os
 
 from .client import TgClient
-from .dc import get_updates_schema, send_message_schema
+from .dc import GET_UPDATES_SCHEMA, SEND_MESSAGE_RESPONSE_SCHEMA
 
 tg_client = TgClient(os.environ.get('TG_TOKEN'))
 
-__all__ = ("get_updates_schema", "send_message_schema", "tg_client", "TgClient")
+__all__ = ("GET_UPDATES_SCHEMA", "SEND_MESSAGE_RESPONSE_SCHEMA", "tg_client", "TgClient")
