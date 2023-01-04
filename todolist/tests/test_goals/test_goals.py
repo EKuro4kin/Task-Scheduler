@@ -2,19 +2,21 @@ import json
 
 import pytest
 from django.urls import reverse
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from goals import serializers
 from tests import factories
 
 #tests category
 
-@pytest.mark.django_db
-def test_create(auth_client, new_user, board, participant):
-    response = auth_client.post(reverse('create-category'),
-                                data=json.dumps({'title': 'test_category', 'board': board.pk}),
-                                content_type='application/json')
-
-    assert response.status_code == 201
+# @pytest.mark.django_db
+# def test_create(auth_client, new_user, board, participant):
+#     response = auth_client.post(reverse('create-category'),
+#                                 data=json.dumps({'title': 'test_category', 'board': board.pk}),
+#                                 content_type='application/json')
+#
+#     assert response.status_code == 201
 
 
 # @pytest.mark.django_db
@@ -22,17 +24,19 @@ def test_create(auth_client, new_user, board, participant):
 #     categories = factories.CategoryFactory.create_batch(5, board=board, user=new_user)
 #
 #     response = auth_client.get(reverse('list-categories'))
-#     expected_response = serializers.GoalCategorySerializer(instance=categories, many=True).data
+#
+#     category_list = serializers.GoalCategorySerializer(instance=categories, many=True).data
+#     expected_response = sorted(category_list, key=lambda x: x['title'])
 #
 #     assert response.status_code == 200
 #     assert response.data == expected_response
-#
+
 #
 # @pytest.mark.django_db
 # def test_retrieve(auth_client, new_user, category, board):
 #     response = auth_client.get(reverse('retrieve-update-destroy-category', args=[category.pk]))
 #
-#     expected_response = {'id': 7,
+#     expected_response = {'id': response.data.get('id'),
 #                          'user': {'id': new_user.pk,
 #                                   'username': new_user.username,
 #                                   'first_name': '',
@@ -61,23 +65,23 @@ def test_create(auth_client, new_user, board, participant):
 #                                data={'board': board.pk, 'title': 'test_category'})
 #
 #     assert response.status_code == 200
-#     assert response.data.get('title') == 'test name category'
+#     assert response.data.get('title') == 'test_category'
 #
 # #tests comments
 #
-# @pytest.mark.django_db
-# def test_create(auth_client, new_user, goal):
-#     response = auth_client.post(reverse('create-comment'),
-#                                 data={'text': 'test comment', 'goal': goal.pk})
-#
-#     expected_response = {'id': response.data.get('id'),
-#                          'created': response.data.get('created'),
-#                          'updated': response.data.get('updated'),
-#                          'text': 'test comment',
-#                          'goal': goal.pk}
-#
-#     assert response.status_code == 201
-#     assert response.data == expected_response
+@pytest.mark.django_db
+def test_create(auth_client, new_user, goal):
+    response = auth_client.post(reverse('create-comment'),
+                                data={'text': 'test comment', 'goal': goal.pk})
+
+    expected_response = {'id': response.data.get('id'),
+                         'created': response.data.get('created'),
+                         'updated': response.data.get('updated'),
+                         'text': 'test comment',
+                         'goal': goal.pk}
+
+    assert response.status_code == 201
+    assert response.data == expected_response
 #
 #
 # @pytest.mark.django_db

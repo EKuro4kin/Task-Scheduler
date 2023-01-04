@@ -18,7 +18,7 @@ def new_user(db):
 @pytest.fixture
 def auth_client(new_user):
     client = APIClient()
-    client.login(username="Vasya_1995", password="Password_1234")
+    client.force_authenticate(new_user)
     return client
 
 
