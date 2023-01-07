@@ -43,3 +43,5 @@ class CommentFactory(factory.django.DjangoModelFactory):
         model = GoalComment
 
     text = 'comments'
+
+
