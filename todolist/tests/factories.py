@@ -44,4 +44,3 @@ class CommentFactory(factory.django.DjangoModelFactory):
 
     text = 'comments'
 
-
