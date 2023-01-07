@@ -78,7 +78,7 @@ class Goal(DatesModelMixin):
     priority = models.PositiveSmallIntegerField(
         verbose_name="Приоритет", choices=Priority.choices, default=Priority.medium
     )
-    due_date = models.DateField(verbose_name="Дата выполнения")
+    due_date = models.DateField(verbose_name="Дата выполнения", blank=True, null=True)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.PROTECT)
     category = models.ForeignKey(GoalCategory, verbose_name="категория", related_name="goals", on_delete=models.CASCADE)
 
