@@ -2,11 +2,12 @@ version: "3.9"
 
 services:
   front:
-    image:  sermalenk/skypro-front:lesson-34
+    image: sermalenk/skypro-front:lesson-38
     ports:
       - 80:80
     depends_on:
       - api
+
   api:
     build:
       dockerfile: Dockerfile
@@ -22,6 +23,20 @@ services:
         condition: service_completed_successfully
     volumes:
       - ./.env:/app/.env
+
+  bot:
+    build:
+      context: .
+    restart: always
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+      pg:
+        condition: service_healthy
+    command: python ./todolist/manage.py
+    volumes:
+      - ./.env:/app/.env
+
   migrations:
     build:
       context: .
@@ -35,6 +50,7 @@ services:
     env_file:
       - .env
     command: python ./todolist/manage.py migrate
+
   pg:
     image: postgres:latest
     ports:
@@ -53,4 +69,4 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-#т
+

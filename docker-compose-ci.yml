@@ -2,19 +2,23 @@ version: "3.9"
 
 services:
   front:
-    image:  sermalenk/skypro-front:lesson-34
+    image: sermalenk/skypro-front:lesson-38
     ports:
       - 80:80
     depends_on:
       - api
+
   api:
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       SECRET_KEY: ${SECRET_KEY}
+      TG_BOT_API_TOKEN: ${TG_BOT_API_TOKEN}
     ports:
       - 8000:8000
     depends_on:
@@ -22,18 +26,44 @@ services:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-  migrations:
+
+  bot:
     image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       SECRET_KEY: ${SECRET_KEY}
+      TG_BOT_API_TOKEN: ${TG_BOT_API_TOKEN}
+    restart: always
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+      pg:
+        condition: service_healthy
+    command: python ./todolist/manage.py
+    volumes:
+      - .docker_env:/app/.env
+
+  migrations:
+    image: ekurochkin/calendar_ekurochkin_app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    environment:
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SECRET_KEY: ${SECRET_KEY}
+      TG_BOT_API_TOKEN: ${TG_BOT_API_TOKEN}
     depends_on:
       pg:
         condition: service_healthy
     command: python ./todolist/manage.py migrate
+
   pg:
     image: postgres:latest
     ports:
